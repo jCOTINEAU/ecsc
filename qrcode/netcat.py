@@ -1,8 +1,12 @@
 import socket
 import base64
 import zlib, sys
+import io
 from PIL import ImageOps
 from PIL import Image
+import re
+from pyzbar.pyzbar import decode
+
 class Netcat:
 
     """ Python 'netcat like' module """
@@ -40,29 +44,18 @@ class Netcat:
         self.socket.close()
 
 
-
 nc = Netcat('challenges.ecsc-teamfrance.fr', 3001)
 output = nc.read_until(b">>")
-print(output)
 
 # start a new note
 nc.write(b'Y' + b'\n')
-qr=nc.read_until(b"=")
-print(qr)
+print(output)
+qr=nc.read_until(b"==")
 decoded=base64.b64decode(qr)
 dzlib = zlib.decompress(decoded)
-f = open('qr', 'wb')
-f.write(dzlib)
-f.close()
-
-
-
-from PIL import Image
-from PIL import ImageOps
-import re
-from pyzbar.pyzbar import decode
-img = Image.open("qr")
-rg = re.compile('.*b\'()\'.*')
+end = nc.read_until(b">>")
+print("answer"+str(end))
+img = Image.open(io.BytesIO(dzlib))
 t=0
 for i in range (0,2320,290):
     for z in range (0,2320,290):
@@ -71,11 +64,8 @@ for i in range (0,2320,290):
         data = decode(cropped_img)
         t+=(int(data[0][0]))
 
-end = nc.read_until(b">>")
-print(end)
 strr = str(t)
-nc.write(bytes(strr,"utf-8"))
-print(bytes(strr,"utf-8"))
+nc.write(bytes(strr,"utf-8")+b"\n")
 end = nc.read(4000)
 print(end)
 
