@@ -36,12 +36,12 @@ def factGood(n,primes,detail):
     return ans
 
 base = 10
+
 def custF(n):
     t = 1
     for i in range(1,n+1):
         t = (i*t)%10
     return t
-
 class Netcat:
 
     """ Python 'netcat like' module """
@@ -85,6 +85,8 @@ def find_le(a, x):
         return a[:i]
     raise ValueError
 
+
+
 primes = prime_range(n=90000000)
 
 p = re.compile('.* ([0-9]+)!.*')
@@ -93,59 +95,29 @@ nextR2 = re.compile('.*t are.*')
 nextI = re.compile('.*the(.*)last.*')
 dCap = re.compile(' (\d+) ')
 foundDig = re.compile('.* (\d+)!')
-nc = Netcat('challenges.ecsc-teamfrance.fr', 3000)
-output = nc.read_until(b">>")
-print(output)
-def facc(n):
-    if n==1:
-        return n
-    return n*facc(n-1)
 
-# start a new note
-nc.write(b"720" + b'\n')
-qr=nc.read_until(b">>")
-print(qr)
-nc.write(b"4" + b'\n')
+i=4
+fac=11
+pp = find_le(primes,fac+1)
+r = factGood(fac,pp,2)
+strr=str(r)
+print(strr)
 
-while 1<2:
-    #print('entering loop')
-    dem = nc.read(3)
-    print(dem)
 
-    cap = nc.read_until(b">>")
-    #print(cap)
-    sCap = str(cap,"utf-8")
-    if nextR.match(sCap) or nextR2.match(sCap):
-        #print("entering next step")
-        splited = sCap.splitlines()
-        toSearch = splited[-2]
-        m = nextI.match(toSearch)
-        #print("has been splited"+toSearch)
-        i=-1
-        if len(m.group(1))==1:
-            i = 1
-        else:
-            m = dCap.match(m.group(1))
-            i=int(m.group(1))
-        print("last"+str(i))
-        m = foundDig.match(toSearch)
-        fac = int(m.group(1))
-        print("calculating fact of "+str(fac))
-        pp = find_le(primes,fac+1)
-        r = factGood(fac,pp,i)
-        strr=str(r)
-        #print("rez is "+strr)
-        nc.write(bytes(strr,"utf-8")+b'\n')
-    else:    
-        m = p.match(cap.decode("utf-8"))
-        #print(m.groups())
-        i =int(m.group(1))
-        #r = math.factorial(i)
-        r = custF(i)
-        strr = str(r)
-        #strr = strr[-1:]
-        #print("strtruncated"+strr)
-        nc.write(bytes(strr,"utf-8")+b'\n')
+
+def pp(k):
+    a=[6,2,4,8]
+    if k<1:
+        return 1
+    return a[k%4]
+
+def ll(n):
+    a =[1,1,2,6,4]
+    if n<5:
+        return a[n]
+    return(pp(n//5)*ll(n//5)*ll(n%5))%10
+
+print(ll(fac))    
 
     
 
