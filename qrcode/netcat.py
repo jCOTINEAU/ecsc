@@ -57,26 +57,26 @@ f.close()
 
 
 
-# image handling 
-
-#img = Image.open("my_recovered_log_file")
-
-#border = (0, 30, 0, 30) # left, up, right, bottom
-#resImg = ImageOps.crop(img, border)
-#f = open ('croped','wb')
-#f.write(resImg)
-#f.close()
-
-
-
-
-
-
-
-
-
+from PIL import Image
+from PIL import ImageOps
+import re
+from pyzbar.pyzbar import decode
+img = Image.open("qr")
+rg = re.compile('.*b\'()\'.*')
+t=0
+for i in range (0,2320,290):
+    for z in range (0,2320,290):
+        area=(i,z,i+290,z+290)
+        cropped_img = img.crop(area)
+        data = decode(cropped_img)
+        t+=(int(data[0][0]))
 
 end = nc.read_until(b">>")
+print(end)
+strr = str(t)
+nc.write(bytes(strr,"utf-8"))
+print(bytes(strr,"utf-8"))
+end = nc.read(4000)
 print(end)
 
 
