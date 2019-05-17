@@ -58,8 +58,8 @@ nc.write(b"4" + b'\n')
 
 while 1<2:
     print('entering loop')
-    #dem = nc.read(10)
-    #print(dem)
+    dem = nc.read(3)
+    print(dem)
 
     cap = nc.read_until(b">>")
     print(cap)
@@ -80,10 +80,13 @@ while 1<2:
         m = foundDig.match(toSearch)
         fac = int(m.group(1))
         print("calculating fact of "+str(fac))
-        r = math.factorial(fac)
+        r = 1
+        for i in range (1,fac+1):
+            r=(r*i)%1000000
+        #r = math.factorial(fac)
         strr=str(r)
         m = deleteZ.match(strr)
-        if len(m.groups())>=1:
+        if len(m.groups())>=2:
             strr=m.group(1)
         else:
             print("no empty 0")
